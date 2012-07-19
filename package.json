@@ -1,0 +1,27 @@
+{
+        "author": "Mark Cavage <mcavage@gmail.com>",
+        "name": "fast",
+        "homepage": "http://mcavage.github.com/node-fast",
+        "version": "0.1.0",
+        "repository": {
+                "type": "git",
+                "url": "git://github.com/mcavage/node-fast.git"
+        },
+        "main": "lib/index.js",
+        "engines": {
+                "node": ">=0.8"
+        },
+        "dependencies": {
+                "assert-plus": "0.1.0",
+                "clone": "0.1.0",
+                "crc": "0.2.0",
+                "microtime": "0.3.1",
+                "verror": "1.2.0"
+        },
+        "devDependencies": {
+                "nodeunit": "0.7.4"
+        },
+        "scripts": {
+                "test": "./node_modules/.bin/nodeunit-dsl test/*.test.js"
+        }
+}
