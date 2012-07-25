@@ -67,8 +67,7 @@ test('error RPC handler', function (t) {
         t.ok(req);
         req.on('error', function (err) {
                 t.ok(err);
-                t.ok(err.cause());
-                t.equal(err.cause().message, 'suck it, mr. client');
+                t.equal(err.message, 'suck it, mr. client');
                 t.done();
         });
 });
