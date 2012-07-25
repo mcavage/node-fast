@@ -5,6 +5,7 @@
 # Tools
 #
 NODEUNIT	:= ./node_modules/.bin/nodeunit
+NPM		:= npm
 
 #
 # Files

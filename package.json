@@ -16,7 +16,7 @@
                 "clone": "0.1.0",
                 "crc": "0.2.0",
                 "microtime": "0.3.1",
-                "verror": "1.2.0"
+                "verror": "git://github.com/mcavage/node-verror.git#d0b1d0e5907787d9c604e917695ac731c09e68a1"
         },
         "devDependencies": {
                 "nodeunit": "0.7.4"
