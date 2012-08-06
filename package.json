@@ -2,7 +2,7 @@
         "author": "Mark Cavage <mcavage@gmail.com>",
         "name": "fast",
         "homepage": "http://mcavage.github.com/node-fast",
-        "version": "0.1.3",
+        "version": "0.1.4",
         "repository": {
                 "type": "git",
                 "url": "git://github.com/mcavage/node-fast.git"
