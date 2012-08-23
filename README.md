@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/mcavage/node-fast.png)](http://travis-ci.org/mcavage/node-fast)
 `fast` is a very small JSON over TCP messaging framework.  Effectively, it lets
 you write RPC systems that "stream" many results back for a single message (not in
 the sense of a streaming JSON parser, but in the sense of many objects that are
