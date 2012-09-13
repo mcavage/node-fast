@@ -2,7 +2,7 @@
         "author": "Mark Cavage <mcavage@gmail.com>",
         "name": "fast",
         "homepage": "http://mcavage.github.com/node-fast",
-        "version": "0.1.5",
+        "version": "0.1.6",
         "repository": {
                 "type": "git",
                 "url": "git://github.com/mcavage/node-fast.git"
@@ -12,8 +12,8 @@
                 "node": ">=0.8"
         },
         "dependencies": {
-                "assert-plus": "0.1.0",
-                "clone": "0.1.0",
+                "assert-plus": "0.1.1",
+                "clone": "0.1.1",
                 "crc": "0.2.0",
                 "microtime": "0.3.1",
                 "retry": "0.6.0",
