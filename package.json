@@ -16,6 +16,7 @@
                 "backoff": "1.2.0",
                 "clone": "0.1.1",
                 "crc": "0.2.0",
+                "dtrace-provider": "0.2.4",
                 "microtime": "0.3.3",
                 "verror": "git://github.com/davepacheco/node-verror.git#1514e14"
         },
