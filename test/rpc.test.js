@@ -61,13 +61,20 @@ test('echo RPC handler', function (t) {
 
 test('error RPC handler', function (t) {
         server.rpc('err', function (res) {
-                res.write(new Error('suck it, mr. client'));
+                var e = new Error('suck it, mr. client');
+                e.context = {
+                        foo: 'bar'
+                };
+                res.write(e);
         });
         var req = client.rpc('err');
         t.ok(req);
         req.on('error', function (err) {
                 t.ok(err);
                 t.equal(err.message, 'suck it, mr. client');
+                t.ok(err.context);
+                if (err.context)
+                        t.equal(err.context.foo, 'bar');
                 t.done();
         });
 });
