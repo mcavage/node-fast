@@ -12,7 +12,9 @@ var test = require('./helper.js').test;
 
 test('serialize ok', function (t) {
         var encoder = new fast.MessageEncoder();
-        encoder.on('data', function onData(buf) {
+
+        encoder.on('readable', function onReadable() {
+                var buf = encoder.read();
                 t.ok(buf);
                 t.equal(buf[0], 0x01); // v
                 t.equal(buf[1], 0x01); // t
