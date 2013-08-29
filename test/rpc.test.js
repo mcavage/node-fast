@@ -102,7 +102,7 @@ test('streaming RPC handler', function (t) {
 
 
 test('RPC handler with thrown error #1', function (t) {
-    server.rpc('echo', function (message, res) {
+    server.rpc('echo2', function (message, res) {
         process.nextTick(function () {
             throw new Error('boom');
         });
@@ -114,18 +114,18 @@ test('RPC handler with thrown error #1', function (t) {
         t.ok(res);
         res.end(err);
     });
-    var req = client.rpc('echo', 'foo');
-    t.ok(req);
-    req.on('error', function (err) {
+
+    client.rpc('echo2', 'foo').once('error', function (err) {
         t.ok(err);
         t.done();
     });
+
 });
 
 
 
 test('RPC handler with thrown error #2', function (t) {
-    server.rpc('echo', function (message, res) {
+    server.rpc('echo3', function (message, res) {
         process.nextTick(function () {
             throw new Error('boom');
         });
@@ -137,9 +137,8 @@ test('RPC handler with thrown error #2', function (t) {
         t.ok(res);
         res.end(err);
     });
-    var req = client.rpc('echo', 'foo');
-    t.ok(req);
-    req.on('error', function (err) {
+
+    client.rpc('echo3', 'foo').once('error', function (err) {
         t.ok(err);
         t.done();
     });
