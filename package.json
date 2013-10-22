@@ -6,7 +6,7 @@
     ],
     "name": "fast",
     "homepage": "http://mcavage.github.com/node-fast",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "repository": {
         "type": "git",
         "url": "git://github.com/mcavage/node-fast.git"
