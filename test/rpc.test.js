@@ -146,8 +146,20 @@ test('RPC handler with thrown error #2', function (t) {
 
 
 test('teardown', function (t) {
+    var serverClosed = false;
+    var clientClosed = false;
+    function tryEnd() {
+        if (serverClosed && clientClosed) {
+            t.done();
+        }
+    }
     server.on('close', function () {
-        t.done();
+        serverClosed = true;
+        tryEnd();
+    });
+    client.on('close', function () {
+        clientClosed = true;
+        tryEnd();
     });
     client.close();
     server.close();
