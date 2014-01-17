@@ -2,11 +2,12 @@
     "author": "Mark Cavage <mcavage@gmail.com>",
     "contributors": [
         "Mike Harsch",
+        "Nate Fitche",
         "Yunong Xiao"
     ],
     "name": "fast",
     "homepage": "http://mcavage.github.com/node-fast",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "repository": {
         "type": "git",
         "url": "git://github.com/mcavage/node-fast.git"
