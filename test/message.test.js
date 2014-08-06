@@ -1,10 +1,7 @@
 // Copyright 2012 Mark Cavage.  All rights reserved.
 
 var fast = require('../lib');
-
-if (require.cache[__dirname + '/helper.js'])
-    delete require.cache[__dirname + '/helper.js'];
-var test = require('./helper.js').test;
+var test = require('tape').test;
 
 
 
@@ -25,7 +22,7 @@ test('serialize ok', function (t) {
         t.deepEqual(JSON.parse(buf.slice(15, 32).toString()), {
             hello: 'world'
         });
-        t.done();
+        t.end();
     });
     encoder.send({
         msgid: 123,
@@ -61,7 +58,7 @@ test('deserialize ok', function (t) {
         t.equal(msg2.type, msg1.type);
         t.equal(msg2.version, msg1.version);
         t.deepEqual(msg2.data, msg1.data);
-        t.done();
+        t.end();
     });
 
     encoder.pipe(decoder);

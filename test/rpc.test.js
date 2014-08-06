@@ -1,10 +1,7 @@
 // Copyright 2012 Mark Cavage.  All rights reserved.
 
 var fast = require('../lib');
-
-if (require.cache[__dirname + '/helper.js'])
-    delete require.cache[__dirname + '/helper.js'];
-var test = require('./helper.js').test;
+var test = require('tape').test;
 
 
 
@@ -22,13 +19,13 @@ var server;
 test('createServer', function (t) {
     server = fast.createServer();
     t.ok(server);
-    t.done();
+    t.end();
 });
 
 
 test('listen', function (t) {
     server.listen(PORT, function () {
-        t.done();
+        t.end();
     });
 });
 
@@ -39,7 +36,7 @@ test('createClient', function (t) {
         port: PORT
     });
     client.on('connect', function () {
-        t.done();
+        t.end();
     });
 });
 
@@ -54,7 +51,7 @@ test('echo RPC handler', function (t) {
         t.equal(msg, 'hello world');
     });
     req.on('end', function () {
-        t.done();
+        t.end();
     });
 });
 
@@ -75,7 +72,7 @@ test('error RPC handler', function (t) {
         t.ok(err.context);
         if (err.context)
             t.equal(err.context.foo, 'bar');
-        t.done();
+        t.end();
     });
 });
 
@@ -96,7 +93,7 @@ test('streaming RPC handler', function (t) {
     });
     req.on('end', function () {
         t.equal(seen, 10);
-        t.done();
+        t.end();
     });
 });
 
@@ -117,7 +114,7 @@ test('RPC handler with thrown error #1', function (t) {
 
     client.rpc('echo2', 'foo').once('error', function (err) {
         t.ok(err);
-        t.done();
+        t.end();
     });
 
 });
@@ -140,7 +137,7 @@ test('RPC handler with thrown error #2', function (t) {
 
     client.rpc('echo3', 'foo').once('error', function (err) {
         t.ok(err);
-        t.done();
+        t.end();
     });
 });
 
@@ -150,7 +147,7 @@ test('teardown', function (t) {
     var clientClosed = false;
     function tryEnd() {
         if (serverClosed && clientClosed) {
-            t.done();
+            t.end();
         }
     }
     server.on('close', function () {

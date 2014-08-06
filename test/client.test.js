@@ -1,18 +1,15 @@
 // Copyright 2014 Joyent, Inc.  All rights reserved.
 
 var fast = require('../lib');
-
-if (require.cache[__dirname + '/helper.js'])
-    delete require.cache[__dirname + '/helper.js'];
-var test = require('./helper.js').test;
+var test = require('tape').test;
 
 
 ///--- Globals
 
-var HOST = process.env.TEST_HOST || "127.0.0.1";
+var HOST = process.env.TEST_HOST || '127.0.0.1';
 var PORT = process.env.TEST_PORT || 12345;
 // a bogus loopback address should work for testing connect timeout
-var TIMEOUT_HOST = process.env.TEST_TIMEOUT_HOST || "127.1.1.1";
+var TIMEOUT_HOST = process.env.TEST_TIMEOUT_HOST || '127.1.1.1';
 var TIMEOUT_MS = 1000;
 
 var client;
@@ -26,7 +23,7 @@ test('connect timeout', function (t) {
     function done() {
         client.removeAllListeners();
         client.close();
-        t.done();
+        t.end();
     }
 
     client = fast.createClient({
@@ -58,7 +55,7 @@ test('close suppress connectErrors', function (t) {
         client.close();
         setTimeout(function () {
             t.ok(true);
-            t.done();
+            t.end();
         }, TIMEOUT_MS);
     });
 });
@@ -81,6 +78,6 @@ test('connect retry limit', function (t) {
         // The first failure is not a retry
         t.equal(realCount, targetCount+1, 'retry count');
         client.close();
-        t.done();
+        t.end();
     });
 });
