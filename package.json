@@ -18,7 +18,7 @@
     },
     "dependencies": {
         "assert-plus": "0.1.5",
-        "backoff": "2.3.0",
+        "backoff": "2.4.0",
         "crc": "0.2.1",
         "dtrace-provider": "0.2.8",
         "microtime": "0.5.1",
