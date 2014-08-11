@@ -141,6 +141,32 @@ test('RPC handler with thrown error #2', function (t) {
     });
 });
 
+test('undefined RPC - checkDefined', function (t) {
+    var port = PORT+1;
+    var cServer = fast.createServer({
+        checkDefined: true
+    });
+    t.ok(cServer);
+    cServer.listen(port, function () {
+        var cClient = fast.createClient({
+            host: 'localhost',
+            port: port
+        });
+        t.ok(cClient);
+        cClient.on('connect', function () {
+            t.pass('connected');
+            var req = cClient.rpc('notdefined', 'test');
+            req.once('error', function (err) {
+                t.ok(err);
+                t.equal(err.name, 'RPCNotDefinedError');
+                cClient.close();
+                cServer.close();
+                t.end();
+            });
+        });
+    });
+});
+
 
 test('teardown', function (t) {
     var serverClosed = false;
