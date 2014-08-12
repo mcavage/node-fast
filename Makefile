@@ -4,7 +4,8 @@
 #
 # Tools
 #
-NODEUNIT	:= ./node_modules/.bin/nodeunit
+ISTANBUL	:= ./node_modules/.bin/istanbul
+FAUCET		:= ./node_modules/.bin/faucet
 NPM		:= npm
 
 #
@@ -23,17 +24,17 @@ include ./tools/mk/Makefile.defs
 # Repo-specific targets
 #
 .PHONY: all
-all: $(NODEUNIT) $(REPO_DEPS)
+all: $(ISTANBUL) $(REPO_DEPS)
 	$(NPM) rebuild
 
-$(NODEUNIT): | $(NPM_EXEC)
+$(ISTANBUL): | $(NPM_EXEC)
 	$(NPM) install
 
-CLEAN_FILES += $(NODEUNIT) ./node_modules/nodeunit
+CLEAN_FILES += ./node_modules ./coverage
 
 .PHONY: test
-test: $(NODEUNIT)
-	$(NODEUNIT) test/*.test.js
+test: $(ISTANBUL)
+	$(ISTANBUL) cover --print none test/test.js | $(FAUCET)
 
 include ./tools/mk/Makefile.deps
 include ./tools/mk/Makefile.targ
