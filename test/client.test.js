@@ -81,3 +81,38 @@ test('connect retry limit', function (t) {
         t.end();
     });
 });
+
+test('countPending', function (t) {
+    server = fast.createServer();
+    server.rpc('sleep', function (timeout, res) {
+        setTimeout(function () {
+            res.end(null);
+        }, parseInt(timeout, 10));
+    });
+    server.listen(PORT, function () {
+        client = fast.createClient({
+            host: 'localhost',
+            port: PORT
+        });
+        client.once('connect', function () {
+            client.rpc('sleep', 900);
+            client.rpc('sleep', 1900);
+            client.rpc('sleep', 2900);
+
+            var expected = 3;
+            function check() {
+                t.equal(expected, client.countPending);
+                if (expected === 0) {
+                    client.close();
+                    server.close();
+                    t.end();
+                } else {
+                    expected--;
+                    setTimeout(check, 1000);
+                }
+            }
+            check();
+        });
+    });
+    //test
+});
