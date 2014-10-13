@@ -77,6 +77,60 @@ test('error RPC handler', function (t) {
 });
 
 
+test('cancelled RPC', function (t) {
+    server.rpc('cancelMe', function (message, res) {
+        var timer = setTimeout(function () {
+            t.fail('not canceled');
+            res.end({woe: 'is me'});
+        }, 500);
+        res.on('cancel', function () {
+            t.pass('canceled');
+            clearTimeout(timer);
+        });
+    });
+    var req = client.rpc('cancelMe', 'test');
+    t.ok(req);
+    req.once('error', function (err) {
+        t.ok(err);
+        t.equal(err.name, 'RPCCanceled');
+    });
+    setTimeout(req.cancel.bind(req), 200);
+    setTimeout(t.end.bind(t), 1000);
+});
+
+
+test('cancel on disconnect', function (t) {
+    t.plan(4);
+    var port = PORT+1;
+    var cServer = fast.createServer();
+    var cClient;
+    cServer.rpc('toCancel', function (arg, res) {
+        res.on('cancel', function () {
+            t.pass('rpc cancel');
+            cClient.close();
+            cServer.close();
+        });
+    });
+    t.ok(cServer);
+    cServer.listen(port, function () {
+        cClient = fast.createClient({
+            host: 'localhost',
+            port: port
+        });
+        t.ok(cClient);
+        cClient.once('connect', function () {
+            t.pass('connected');
+            var req = cClient.rpc('toCancel', 'test');
+            setTimeout(function () {
+                // simulate disconnect
+                cClient.fast_conn.destroy();
+            }, 100);
+            req.once('error', function () {});
+        });
+    });
+});
+
+
 test('streaming RPC handler', function (t) {
     server.rpc('stream', function (res) {
         for (var i = 1; i <= 10; i++)
@@ -120,7 +174,6 @@ test('RPC handler with thrown error #1', function (t) {
 });
 
 
-
 test('RPC handler with thrown error #2', function (t) {
     server.rpc('echo3', function (message, res) {
         process.nextTick(function () {
@@ -140,6 +193,7 @@ test('RPC handler with thrown error #2', function (t) {
         t.end();
     });
 });
+
 
 test('undefined RPC - checkDefined', function (t) {
     var port = PORT+1;
