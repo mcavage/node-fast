@@ -1,6 +1,6 @@
 # node-fast Changelog
 
-## CURRENT
+## 0.4.0
 
  - Add support for canceling in-progress RPCs
  - Force missing RPC endpoint errors in server
