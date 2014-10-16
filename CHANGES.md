@@ -1,6 +1,6 @@
 # node-fast Changelog
 
-## CURRENT
+## 0.4.1
 
 - Update dtrace-provider to 0.3.0
 
