@@ -7,7 +7,7 @@
         "Patrick Mooney"
     ],
     "name": "fast",
-    "homepage": "http://mcavage.github.com/node-fast",
+    "homepage": "https://github.com/mcavage/node-fast",
     "version": "0.4.1",
     "repository": {
         "type": "git",
