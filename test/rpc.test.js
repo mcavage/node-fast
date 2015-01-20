@@ -154,7 +154,7 @@ test('streaming RPC handler', function (t) {
 
 test('RPC handler with thrown error #1', function (t) {
     server.rpc('echo2', function (message, res) {
-        process.nextTick(function () {
+        setImmediate(function () {
             throw new Error('boom');
         });
     });
@@ -176,7 +176,7 @@ test('RPC handler with thrown error #1', function (t) {
 
 test('RPC handler with thrown error #2', function (t) {
     server.rpc('echo3', function (message, res) {
-        process.nextTick(function () {
+        setImmediate(function () {
             throw new Error('boom');
         });
     });
@@ -223,21 +223,13 @@ test('undefined RPC - checkDefined', function (t) {
 
 
 test('teardown', function (t) {
-    var serverClosed = false;
-    var clientClosed = false;
-    function tryEnd() {
-        if (serverClosed && clientClosed) {
-            t.end();
-        }
-    }
-    server.on('close', function () {
-        serverClosed = true;
-        tryEnd();
-    });
     client.on('close', function () {
-        clientClosed = true;
-        tryEnd();
+        t.pass('client closed');
+        server.on('close', function () {
+            t.pass('server closed');
+            t.end();
+        });
+        server.close();
     });
     client.close();
-    server.close();
 });

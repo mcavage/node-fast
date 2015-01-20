@@ -42,6 +42,7 @@ test('connect timeout', function (t) {
     });
 });
 
+
 test('close suppress connectErrors', function (t) {
     client = fast.createClient({
         host: TIMEOUT_HOST,
@@ -51,7 +52,7 @@ test('close suppress connectErrors', function (t) {
     client.on('connectError', function (err) {
         t.fail('error not suppressed');
     });
-    process.nextTick(function () {
+    setImmediate(function () {
         client.close();
         setTimeout(function () {
             t.ok(true);
@@ -59,6 +60,7 @@ test('close suppress connectErrors', function (t) {
         }, TIMEOUT_MS);
     });
 });
+
 
 test('connect retry limit', function (t) {
     var targetCount = 3;
@@ -81,6 +83,7 @@ test('connect retry limit', function (t) {
         t.end();
     });
 });
+
 
 test('countPending', function (t) {
     server = fast.createServer();
@@ -115,4 +118,62 @@ test('countPending', function (t) {
         });
     });
     //test
+});
+
+
+test('RPC error on close', function (t) {
+    server = fast.createServer();
+    server.rpc('slow', function (res) {
+        // Don't respond to simulate indefinite hang
+    });
+    server.listen(PORT, function () {
+        client = fast.createClient({
+            host: HOST,
+            port: PORT
+        });
+        client.once('connect', function () {
+            t.pass('connected');
+            var res = client.rpc('slow');
+            res.on('error', function (err) {
+                t.equal(err.name, 'ConnectionClosedError');
+                server.close();
+                t.end();
+            });
+            setImmediate(function () {
+                t.pass('closing');
+                client.close();
+            });
+        });
+    });
+});
+
+
+test('RPC error when not connected', function (t) {
+    server = fast.createServer();
+    server.rpc('pass', function (res) {
+        res.end(null);
+    });
+    server.listen(PORT, function () {
+        client = fast.createClient({
+            host: HOST,
+            port: PORT,
+            reconnect: false
+        });
+        client.once('connect', function () {
+            // Simulate server close
+            client.fast_conn.destroy();
+        });
+        client.once('close', function () {
+            var res = client.rpc('pass');
+            res.once('error', function (err) {
+                t.ok(err);
+                t.equal(err.name, 'NoConnectionError');
+                server.close();
+                client.close();
+                t.end();
+
+            });
+            res.on('end', t.fail.bind(t, 'end called'));
+        });
+    });
 });
