@@ -195,6 +195,36 @@ test('RPC handler with thrown error #2', function (t) {
 });
 
 
+test('RPC suppress messages after error', function (t) {
+    t.plan(2);
+    server.rpc('sup_err', function (res) {
+        t.pass('RPC called');
+        res.write(new Error('bummer'));
+        res.write({foo: 'bar'});
+        res.end();
+    });
+    var req = client.rpc('sup_err');
+    req.on('error', t.ok.bind(t));
+    req.on('end', t.fail.bind(t, 'end not suppressed'));
+    req.on('message', t.fail.bind(t, 'msg not suppressed'));
+});
+
+
+test('RPC suppress messages after end', function (t) {
+    t.plan(2);
+    server.rpc('sup_end', function (res) {
+        t.pass('RPC called');
+        res.end();
+        res.write(new Error('bummer'));
+        res.write({foo: 'bar'});
+    });
+    var req = client.rpc('sup_end');
+    req.on('end', t.pass.bind(t));
+    req.on('error', t.fail.bind(t, 'error not suppressed'));
+    req.on('message', t.fail.bind(t, 'msg not suppressed'));
+});
+
+
 test('undefined RPC - checkDefined', function (t) {
     var port = PORT+1;
     var cServer = fast.createServer({
