@@ -152,49 +152,6 @@ test('streaming RPC handler', function (t) {
 });
 
 
-test('RPC handler with thrown error #1', function (t) {
-    server.rpc('echo2', function (message, res) {
-        setImmediate(function () {
-            throw new Error('boom');
-        });
-    });
-
-    server.once('error', function (err, msg, res) {
-        t.ok(err);
-        t.ok(msg);
-        t.ok(res);
-        res.end(err);
-    });
-
-    client.rpc('echo2', 'foo').once('error', function (err) {
-        t.ok(err);
-        t.end();
-    });
-
-});
-
-
-test('RPC handler with thrown error #2', function (t) {
-    server.rpc('echo3', function (message, res) {
-        setImmediate(function () {
-            throw new Error('boom');
-        });
-    });
-
-    server.once('uncaughtException', function (err, msg, res) {
-        t.ok(err);
-        t.ok(msg);
-        t.ok(res);
-        res.end(err);
-    });
-
-    client.rpc('echo3', 'foo').once('error', function (err) {
-        t.ok(err);
-        t.end();
-    });
-});
-
-
 test('RPC suppress messages after error', function (t) {
     t.plan(2);
     server.rpc('sup_err', function (res) {
