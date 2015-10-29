@@ -7,22 +7,22 @@ correlated).  For example:
     var server = fast.createServer();
 
     server.rpc('echo', function (fname, lname, res) {
-	    res.write({first: fname});
-		res.end({last: lname});
+        res.write({first: fname});
+        res.end({last: lname});
     });
 
-	server.listen(1234);
+    server.listen(1234);
 
     /// Client
     var client = fast.createClient({host: 'localhost', port: 1234});
-	client.on('connect', function () {
-	    var req = client.rpc('echo', 'mark', 'cavage');
-		req.on('message', function (obj) {
-		    console.log(JSON.stringify(obj, null, 2));
+    client.on('connect', function () {
+        var req = client.rpc('echo', 'mark', 'cavage');
+        req.on('message', function (obj) {
+            console.log(JSON.stringify(obj, null, 2));
         });
-		req.on('end', function () {
-		    client.close();
-			server.close();
+        req.on('end', function () {
+            client.close();
+            server.close();
         });
     });
 
@@ -73,12 +73,12 @@ Where:
 * Version: Currently always `0x01`
 * Type: Currently always `0x01` (Means JSON -> may add GZIP JSON, etc., later)
 * Status: An enum to reflect the what this message is in the sequence:
-** 0x01: `data`: More messages to come
-** 0x02: `end`: No more messages to come (All is well)
-** 0x03: `error`: No more messages to come; error returned from server in `data`
-* MessageID: A 32-bit UInt32 (big endian encoded) from 1 - (2^32 − 1).  A client
-  sets this initially, and all messages returned from the server to the client
-  that correspond to the request must carry the same messageID.
+  * 0x01: `data`: More messages to come
+  * 0x02: `end`: No more messages to come (All is well)
+  * 0x03: `error`: No more messages to come; error returned from server in `data`
+* MessageID: A 32-bit UInt32 (big endian encoded) from 1 - (2^32 − 1).  A
+  client sets this initially, and all messages returned from the server to the
+  client that correspond to the request must carry the same messageID.
 * CRC16: CRC16 of the data, encoded as a 32bit signed integer (big endian)
 * DataLen: 32-bit UInt32, encoded big endian.
 * Data: JSON-encoded data payload.
@@ -87,17 +87,26 @@ On top of that, there is "moar gentlemenly agreement" of what "data" looks like
 to facilitate RPC.  Basically, `data` is a JSON object like this:
 
     {
-	    m: {
-		    name: 'echo',
-			uts: gettimeofday(2) // microseconds since epoch
+        m: {
+            name: 'echo',
+            uts: gettimeofday(2) // microseconds since epoch
         },
-		d: [] // "arguments" to JS function
+        d: [] // "arguments" to JS function
     }
 
 That's pretty much it.  Note there is effectively no try/catch or anything like
 that in this framework, as it's intended to be run "carefully".  If it's too
 problematic I'll add that, but clearly this is meant to do one thing: go fast
 from internal service A to internal service B.  YMMV.
+
+## CRC Woes
+It turns out that the CRC implementation used by node-fast relies on its string
+input being 7-bit clean.  Because UTF-8 stringified data is being passed to it,
+instead of a buffer, this constraint is violated and the calculation result is
+_not_ equivalent to a "real" CRC of the bytewise data.  This issue could be
+fixed with an updated CRC routine, but doing so will render communication
+impossible between new and old implementations.
+
 # Licence
 
 MIT
