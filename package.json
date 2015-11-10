@@ -8,7 +8,7 @@
     ],
     "name": "fast",
     "homepage": "https://github.com/mcavage/node-fast",
-    "version": "0.4.1",
+    "version": "0.5.0",
     "license": "MIT",
     "repository": {
         "type": "git",

@@ -1,5 +1,12 @@
 # node-fast Changelog
 
+## 0.5.0
+
+- Remove domains from server API
+- Update dependencies
+- Drop node 0.8.x compatibility
+- Improve server error behavior for ended/canceled RPCs
+
 ## 0.4.1
 
 - Update dtrace-provider to 0.3.0

@@ -12,3 +12,4 @@ tools
 Makefile*
 *.tar.gz
 *.log
+coverage
