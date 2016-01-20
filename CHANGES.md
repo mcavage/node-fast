@@ -1,5 +1,10 @@
 # node-fast Changelog
 
+## 0.5.1
+
+- Fix client to properly clean up pending socket when `close()` called while a
+  TCP connection is being established.
+
 ## 0.5.0
 
 - Remove domains from server API

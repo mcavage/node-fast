@@ -4,11 +4,12 @@
         "Mike Harsch",
         "Nate Fitch",
         "Yunong Xiao",
-        "Patrick Mooney"
+        "Patrick Mooney",
+        "Julien Gilli"
     ],
     "name": "fast",
     "homepage": "https://github.com/mcavage/node-fast",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "license": "MIT",
     "repository": {
         "type": "git",
