@@ -221,16 +221,6 @@ test('socket properly hangs up via close', function (t) {
             });
 
             client2.on('close', function onClient2Closed() {
-                // When the second client closes, if the bug described by
-                // MORAY-324 is still present, the first client will have
-                // established a connection, and the server won't be able to
-                // close since the first client will never close.
-                // If MORAY-324 is fixed, the first client will have closed its
-                // connection before it's established, and thus as soon as the
-                // second client closes its connection, the server can close
-                // and the test can end.
-                server.close();
-
                 t.equal(client1EmittedClose, true, 'first client should ' +
                     'have emitted close');
 
@@ -248,11 +238,46 @@ test('socket properly hangs up via close', function (t) {
                             'after second client closed, server should have ' +
                             'no remaining client connected');
                     });
+
+                    // When the second client closes, if the bug described by
+                    // MORAY-324 is still present, the first client will have
+                    // established a connection, and the server won't be able to
+                    // close since the first client will never close.
+                    // If MORAY-324 is fixed, the first client will have closed
+                    // its connection before it's established, and thus as soon
+                    // as the second client closes its connection, the server
+                    // can close and the test can end.
+                    server.close();
+
+                    server.on('close', function onServerClosed() {
+                        t.end();
+                    });
+
                 }, 1000);
             });
         });
+    });
 
-        server.on('close', function onServerClosed() {
-            t.end();
+test('client timeout should be cleared on close', function (t) {
+        server = fast.createServer();
+        server.listen(PORT, function () {
+            server.srv.unref();
+
+            client = fast.createClient({
+                host: HOST,
+                port: PORT
+            });
+
+            client.close();
+
+            client.on('close', function onClient1Close() {
+                t.equal(process._getActiveHandles().length, 0,
+                    'there should be no active handle left after client ' +
+                    'closed its connection');
+                server.close();
+                server.on('close', function onServerClose() {
+                    t.end();
+                });
+            });
         });
     });
