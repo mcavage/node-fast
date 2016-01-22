@@ -1,5 +1,9 @@
 # node-fast Changelog
 
+## 0.5.2
+
+- Clear client connect timeout when `close()` is called
+
 ## 0.5.1
 
 - Fix client to properly clean up pending socket when `close()` called while a
