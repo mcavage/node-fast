@@ -281,3 +281,19 @@ test('client timeout should be cleared on close', function (t) {
             });
         });
     });
+
+// This is essentially a regression test for
+// https://smartos.org/bugview/CNAPI-648.
+test('close does not assert', function (t) {
+    // Arguments passed to createClient below are set just to that the client
+    // creation does not assert. The port and connectTimeout arguments do not
+    // have a specific purpose, since the test closes the client before it had a
+    // chance to establish any connection anyway.
+    client = fast.createClient({
+        port: PORT,
+        connectTimeout: TIMEOUT_MS
+    });
+
+    client.close();
+    t.end();
+});
