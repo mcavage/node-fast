@@ -1,5 +1,9 @@
 # node-fast Changelog
 
+## 0.5.3
+
+- Fix case where client blows assertion on `close()`
+
 ## 0.5.2
 
 - Clear client connect timeout when `close()` is called
